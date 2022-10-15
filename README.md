@@ -1,32 +1,31 @@
 # Stock_Qual_Analysis
-This project showcases the steps in quantitative analysis of investment funds to evaluate their suitablity in a diverse portfolio.
+This project showcases the steps in quantitative analysis to evaluate investment funds and their suitablity in a diverse portfolio.
 
 Four investment funds are identified and analysed against the S&P 500 to determine risk vs. return.  Metrics such as daily returns, standard deviation, Sharpe ration and beta are used in the risk analysis, as well as rolling statistics to to assess these funds over time.
-
-*This project can be used to calculate the daily profit to be made when arbitrage is highand one acts quickly, vs waiting until many others take advantage of the opportunity first causing the arbitrage spread to narrow near 0.*
 
 ---
 
 ## Technologies
+Python implementation: CPython
 
-This Project is built to run in Jupyter Lab:
+Python version       : 3.7.13
 
- Python 3.7 for coding
- 
- Pandas for data analysis
- 
- pathlib for importing and reading csv data files
- 
- numpy for mathmatical functions
+IPython version      : 7.31.1
+
+pandas: 1.3.5
+
+numpy : 1.21.5
+
+other packages: pathlib
 
 
 ---
 
 ## Data Collection
 
-***A .csv file with NAV pricing from four major funds and the S&P 500 are used in this project. The files are located in the Resources folder.***
+*A .csv file with NAV pricing from four major funds and the S&P 500 are used in this project. The files are located in the Resources folder.*
 
-1. **The data for this analysis was pulled using the pathlib library from a .csv file, converted by pandas to a dataframe and indexed to the date-time format. Data encompases dates from 2014-2020.
+1. **The data for this analysis was pulled using the Path function in the pathlib library from a .csv file, converted by pandas to a dataframe and indexed to the date-time format. Data encompases dates from 2014-2020.**
     
    `navs_df = pd.read_csv(Path("./Resources/whale_navs.csv"), index_col="date", parse_dates=True, infer_datetime_format=True)`
 
@@ -46,18 +45,19 @@ This Project is built to run in Jupyter Lab:
 
 `navs_daily_returns.plot(figsize=(10,5), title="Daily Returns NAVS v. S&P 500"`
 
-    - `.cumprod()` function was utilitzed and the return was plotted to give a focused look at the cumulative returns over time
+- Then, `cumprod()` function was utilitzed and the return was plotted to give a focused look at the cumulative returns over time
     
 ![bar_cumprod](./images/bar_cumprod.png) 
 
     
 ## Data Analysis for Volitility
 
-1. **Daily returns were retooled into a box plot to allow easy identification of the volitility via return data spread**
+1. **Daily returns were retooled into a box plot to easily identify the volitility via return data spread**
 
 `navs_4_daily_returns = navs_daily_returns.drop("SNP", axis=1)`
 
-![box_returns](./images/box_returns.png)
+
+<p style="text-align:left;"><img src="./images/box_returns.png" width="600" height="400"/></p>
 
 ## Data Analysis for Risk
 1. **Daily returns were again used to find the daily and anualized standard deviation**
@@ -66,7 +66,7 @@ This Project is built to run in Jupyter Lab:
 
 `navs_annualized_std = (navs_daily_returns.std() * np.sqrt(252)).sort_values()`
 
-2. **Using these computations the 21 day rolling standard deviation was calculated and plotted**
+2. **Using these computations the 21 day rolling standard deviation was calculated and plotted indicating the amount of volitility, thus risk, each fund demonstrated**
 
 ![21roll_std_deviation](./images/21roll_std.png)
 
@@ -86,17 +86,20 @@ This Project is built to run in Jupyter Lab:
 1. **Two funds are taken from the data frame for closer evaluation of their behavior over a 60 day rolline window, in comparison to the behavior of the market as a whole**
     - Market variance is determined and then used to find the covariance of each stock to see past correlation
 
-`rolling_60_cov_bshw = navs_daily_returns["BSHW"].rolling(window=60).cov(navs_daily_returns["SNP"])`
+    `rolling_60_cov_bshw = navs_daily_returns["BSHW"].rolling(window=60).cov(navs_daily_returns["SNP"])`
 
     - Rolling beta is calculated and averaged to identify the past volitility of the two stocks in comparison to the market
 
 `rolling_60_bshw_beta = rolling_60_cov_bshw / rolling_60_snp_variance`
+<table><tr>
+<td> <img src="./images/roll_beta_bshw.png" alt="Drawing" style="width: 400px;"/> </td>
+<td> <img src="./images/roll_beta_tiger.png" alt="Drawing" style="width: 400px;"/> </td>
+</tr></table>**Take note of the difference in the X axis**
 
-![roll_beta_bshw](./images/roll_beta_bshw.png)
+2. **Quantitative Analysis of all the data listed above, for risk, return, and behavior relative to the market, allows decison makers a broad viewpoint for selection of fund inclusion into a portfolio for to maximize diversification.**
 
-![roll_beta_tiger](./images/roll_beta_tiger.png)
-
-2. **Quantitative Analysis of all the date listed above, for risk, return, and behavior relative to the market, allows decison makers a broad viewpoint for selection of fund inclusion into a portfolio for to maximize diversification.**
+## Analysis Conclusion
+Using data in this project as an example, I would recommend the fund which closest matched the goals of the overall portfolio in balancing diversification with risk/reward.  Berkshire Hathaway has a higher avg rolling covariance than Tiger Global, making it more sensitive to movements in the S&P 500. Depending on the breath of the portfolio as it stands, I would recommend Berkshire Hathaway (which has the higher Sharpe Ratio) if the portfolio is willing to take on more risk for the reward of a larger return.  If there is already enough risk spread through the other portfolio holdings, I would recommend Tiger Global as it has a more conservative risk/reward profile and less correlation to the S&P 500.
 
 ## Contributors
 
